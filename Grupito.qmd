@@ -1,8 +1,12 @@
 ---
 title: "GRUPITO"
-format: html
 editor: visual
-
+format: html
+toc: true
+toc-location: left
+number-sections: true
+embed_resources: true
+output-file: index
         
 ---
 
