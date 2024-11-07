@@ -1,31 +1,57 @@
 ---
-title: "GRUPITO"
-format: html
-editor: visual
-
-        
+title: "G"
+author: "Giancarlo Castro Caman"
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed_resources: true
+    output-file: index
+    
 ---
 
-## Quarto
+# Quarto
+
+```{r}
+
+```
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
 ## Running Code
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+When you click the *Render* button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
-```{r}
-1 + 1
-```
+{r} 1 + 1 You can add options to executable code like this
 
-You can add options to executable code like this
+{r} #\| echo: false 2 \* 2
 
-```{r}
-#| echo: false
-2 * 2
-```
+The echo: false option disables the printing of code (only output is displayed).
 
-The `echo: false` option disables the printing of code (only output is displayed).
+# como usar quarto?
+
+## fuentes
+
+-   negrita: *esto es fuente negrita*
+-   cursiva: *solanum tuberosum*
+
+## formulas matematicas
+
+Area de una circunferencia $Area_{circunferencia}=pi.r^2$
+
+esta es una formula cualquiera $$k=\frac{\left(2x-1\right)^2-1}{4}"$$
+
+# Mi primera pagina web
+
+1.  Tener mi proyecto
+
+2.  Conectar mi proyecto a GitHub
+
+3.  Tener un archivo en formato html llamado 'index.html'
+
+4.  Hacer push al repositorio
+
 # Modelos lineales mixtos
 
 ## importar datos
@@ -37,42 +63,42 @@ data_de_tesis_prof <- openxlsx::read.xlsx("LA MOLINA 2014 POTATO WUE (FB).xlsx",
 ```
 ## Modelo lineal
 ```{r}
-modelo <- lm(formula = stemdw ~ bloque + geno + riego + riego*geno, data = data_de_tesis_prof)
+modelo <- lm(formula = lfa ~ bloque + geno + riego + riego*geno, data = data_de_tesis_prof)
 
 anova(modelo)
 plot(modelo)
 ```
 ## Box plot
 ```{r}
-ggplot(data_de_tesis_prof, aes(x = geno, y = stemdw, colour =riego)) + 
+ggplot(data_de_tesis_prof, aes(x = geno, y = lfa, colour =riego)) + 
   geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
   labs(title = "Boxplot con interacción de niveles de riego y genotipo", 
        x = "Interacción Riego y Genotipo", 
-       y = "Peso seco del tallo (g)") + 
+       y = "Area foliar (cm^2)") + 
   theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # inclinar etiquetas del eje x
 ```
-## Modelo lineal: rootdw
+## Modelo lineal: Hi
 ```{r}
-modelo <- aov(formula = block + rootdw ~ riego + geno + riego*geno
+modelo <- aov(formula = block + hi ~ riego + geno + riego*geno
           , data = data_de_tesis_prof)
 anova(modelo)
 
 plot(modelo)
 ```
-## Modelo lineal mixto para el stemdw
+## Modelo lineal mixto para el lfa
 ```{r}
 library(lme4)
 library(lmerTest)
 
-model <- lme4::lmer(stemdw ~ riego + geno + riego*geno +
+model <- lme4::lmer(lfa ~ riego + geno + riego*geno +
                       (1|bloque), data = data_de_tesis_prof)
 
 anova(model)
 
 plot(modelo)
 
-ol <- boxplot(stemdw ~ riego*geno,data_de_tesis_prof)
+ol <- boxplot(lfa ~ riego*geno,data_de_tesis_prof)
 ol
 ```
 
@@ -80,14 +106,14 @@ ol
 library(inti)
 
 model <- remove_outliers(data = data_de_tesis_prof
-                         , formula = stemdw ~ riego + geno + riego*geno + (1|bloque)
+                         , formula = lfa ~ riego + geno + riego*geno + (1|bloque)
                          , plot_diag = T
                 )
 model
 ```
 # Agricolae comparacion de medias
 ```{r}
-modelo <- lm(formula = stemdw ~ bloque + riego + geno + riego*geno
+modelo <- lm(formula = lfa ~ bloque + riego + geno + riego*geno
           , data = data_de_tesis_prof)
 anova(modelo)
 
@@ -113,19 +139,20 @@ str(grupos)
 ```
 
 ```{r}
-ggplot(grupos, aes(x = geno, y = stemdw, fill = riego)) +
+ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) +
   geom_bar(stat = "identity", position = "dodge", color = "black") +
-  labs(x = "Genotipo", y = "STEMDW", fill = "Riego") +
+  labs(x = "Genotipo", y = "LFA", fill = "Riego") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ggtitle("Gráfico de barras: STEMDW por genotipo y riego") +
-  geom_text(aes(label = groups, y = stemdw + 0.05), 
+  ggtitle("Gráfico de barras: LFA por genotipo y riego") +
+  geom_text(aes(label = groups, y = lfa + 0.05), 
             position = position_dodge(width = 0.9), 
       vjust=0)
 ```
+
 # enmeans: Comparación de medias
 ```{r}
-modelo <- lme4::lmer(rootdw ~ (1|bloque) + geno*riego
+modelo <- lme4::lmer(hi ~ (1|bloque) + geno*riego
                      , data = data_de_tesis_prof)
 anova(modelo)
 source('https://inkaverse.com/setup.r')
@@ -162,10 +189,10 @@ ggplot(dtcm, aes(x = geno, y = emmean, fill = riego)) +
   geom_text(aes(label = sig, y = emmean*1*1),
             position = position_dodge(width = 0.9),
             vjust = 0) +
-  labs(x = "Genotipo", y = "rootdw", fill = "Riego") +
+  labs(x = "Genotipo", y = "HI", fill = "Riego") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  ggtitle("Gráfico de barras: stemdw por genotipo y riego")
+  ggtitle("Gráfico de barras: LFA por genotipoyriego")
 ```
 # Analisis multivariado
 ```{r}
